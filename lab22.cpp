@@ -14,6 +14,7 @@ class ComplexNumber{
 		bool operator==(const ComplexNumber &);
 		double abs();
 		double angle();
+		friend ostream& operator<<(ostream&, const ComplexNumber&);
 };
 
 ComplexNumber::ComplexNumber(double x = 0,double y = 0){
@@ -28,7 +29,68 @@ ComplexNumber ComplexNumber::operator-(const ComplexNumber &c){
 	return ComplexNumber(real-c.real,imag-c.imag);
 }
 
-//Write your code here
+//Write your code here.
+ComplexNumber ComplexNumber::operator*(const ComplexNumber &c) {
+	double r = real * c.real - imag * c.imag;
+	double i = real * c.imag + imag * c.real;
+	return ComplexNumber(r, i);
+}
+
+ComplexNumber ComplexNumber::operator/(const ComplexNumber &c) {
+	double denominator = c.real * c.real + c.imag * c.imag;
+	double r = (real * c.real + imag * c.imag) / denominator;
+	double i = (imag * c.real - real * c.imag) / denominator;
+	return ComplexNumber(r, i);
+}
+
+bool ComplexNumber::operator==(const ComplexNumber &c) {
+    return (real == c.real) && (imag == c.imag);
+}
+
+bool operator==(int lhs, const ComplexNumber& rhs) {
+    return lhs == rhs.real && rhs.imag == 0;
+}
+
+
+double ComplexNumber::abs() {
+	return sqrt(real * real + imag * imag);
+}
+
+double ComplexNumber::angle() {
+	return atan2(imag, real) * (180.0 / M_PI); 
+}
+
+ostream& operator<<(ostream& os, const ComplexNumber& c) {
+	if (c.real == 0 && c.imag == 0) {
+		os << "0";
+	} else if (c.real == 0) {
+		os << c.imag << "i";
+	} else if (c.imag == 0) {
+		os << c.real;
+	} else {
+		os << c.real << (c.imag > 0 ? "+" : "") << c.imag << "i";
+	}
+	return os;
+}
+
+ComplexNumber operator+(double lhs, const ComplexNumber& rhs) {
+    return ComplexNumber(lhs + rhs.real, rhs.imag);
+}
+
+ComplexNumber operator-(double lhs, const ComplexNumber& rhs) {
+    return ComplexNumber(lhs - rhs.real, -rhs.imag);
+}
+
+ComplexNumber operator*(double lhs, const ComplexNumber& rhs) {
+    return ComplexNumber(lhs * rhs.real, lhs * rhs.imag);
+}
+
+ComplexNumber operator/(double lhs, const ComplexNumber& rhs) {
+    double denominator = rhs.real * rhs.real + rhs.imag * rhs.imag;
+    double r = (lhs * rhs.real) / denominator;
+    double i = (-lhs * rhs.imag) / denominator;
+    return ComplexNumber(r, i);
+}
 
 int main(){
 	ComplexNumber a(1.5,2),b(3.2,-2.5),c(-1,1.2);	
